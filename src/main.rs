@@ -21,47 +21,51 @@ impl Maze {
         Maze { size, grid }
     }
 
-    fn get(&self, x: usize, y: usize) -> Option<&Cell> {
-        self.grid.get(y * self.size + x)
+    fn get(&self, index: usize) -> Option<&Cell> {
+        self.grid.get(index)
     }
 
-    fn set(&mut self, x: usize, y: usize, cell: Cell) {
-        if x < self.size && y < self.size {
-            self.grid[y * self.size + x ] = cell;
+    fn set(&mut self, index: usize, cell: Cell) {
+        if index < self.size * self.size {
+            self.grid[index] = cell;
         }
     }
 }
 
 fn main() {
-    let mut maze: Maze = Maze::new(10);
-    let starting_cell = (0, 0);
-    maze.set(starting_cell.0, starting_cell.1, Cell::Start);
+    let mut maze: Maze = Maze::new(3);
+    let starting_cell = 0;
+    maze.set(starting_cell, Cell::Start);
     
-    let mut maze_route: Stack<(usize, usize)> = Stack::new();
+    let mut maze_route: Stack<usize> = Stack::new();
     maze_route.push(starting_cell);
 
-    
-
-
+    println!("{:?}", get_neighbors(&maze.size, 8));
 }
 
-fn print_maze(maze: &Maze) {
-    for i in 0..maze.size {
-        for j in 0..maze.size {
-            let cell_data: &str = match maze.get(i, j) {
-                Some(n) => {
-                    if *n == Cell::Wall {
-                        "🧱"
-                    } else if *n == Cell::Start {
-                        "⭕"
-                    } else {
-                        "ERROR"
-                    }
-                }
-                None => { return; }
-            };
-            print!("{}", cell_data)
+fn get_neighbors(maze_size: &usize, cell_index: usize) -> [Option<usize>; 4] {
+    let mut neighbors: [Option<usize>; 4] = [None; 4];
+    if cell_index < maze_size*maze_size {
+        // right neighbor index 0
+        if (cell_index + 1) % *maze_size != 0 {
+            neighbors[0] = Some(cell_index + 1);
         }
-        println!("");
+    
+        // top neighbor index 1
+        if cell_index >= *maze_size {
+            neighbors[1] = Some(cell_index - maze_size);
+        }
+    
+        // left neighbor index 2
+        if cell_index % *maze_size != 0 {
+            neighbors[2] = Some(cell_index - 1);
+        }
+    
+        // bottom neighbor index 3
+        if cell_index < maze_size * (maze_size - 1) {
+            neighbors[3] = Some(cell_index + maze_size)
+        }
+    
     }
+    neighbors // No neighbors [None; 4] invalid cell_index
 }
