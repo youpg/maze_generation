@@ -1,6 +1,8 @@
 mod stack;
 use stack::Stack;
 
+use rand::Rng;
+
 #[derive(Clone, Debug, PartialEq)]
 enum Cell {
     Wall,
@@ -33,14 +35,42 @@ impl Maze {
 }
 
 fn main() {
-    let mut maze: Maze = Maze::new(3);
-    let starting_cell = 0;
-    maze.set(starting_cell, Cell::Start);
-    
-    let mut maze_route: Stack<usize> = Stack::new();
-    maze_route.push(starting_cell);
+    let mut rng = rand::thread_rng();
 
-    println!("{:?}", get_neighbors(&maze.size, 8));
+    loop {
+        let mut maze: Maze = Maze::new(3);
+        let starting_cell = rng.gen_range(0..maze.size*maze.size);
+        maze.set(starting_cell, Cell::Start);
+        
+        let mut maze_route: Stack<usize> = Stack::new();
+        maze_route.push(starting_cell);
+        
+        let neighbors_of_cell: [Option<usize>; 4] = get_neighbors(&maze.size, starting_cell);
+    
+        let valid_neighboring_cells: Vec<_> = neighbors_of_cell.iter().filter_map(|&x| x).collect();
+        for cell in valid_neighboring_cells {
+            maze.set(cell, Cell::Path);
+        }
+    
+        print_maze(&maze);
+        println!("\n\n");
+    }
+
+}
+
+fn print_maze(maze: &Maze) {
+    for i in 0..maze.grid.len() {
+        if i % maze.size == 0  {
+            println!("");
+        }
+        let cell_string: &str = match maze.grid[i] {
+            Cell::Wall => { "🧱" },
+            Cell::Path => { "🟦" },
+            Cell::Start => { "🔴" },
+            Cell::End => { "🟥" },
+        };
+        print!("{}", cell_string);
+    }
 }
 
 fn get_neighbors(maze_size: &usize, cell_index: usize) -> [Option<usize>; 4] {
