@@ -20,11 +20,20 @@ impl RecursiveBacktrackingAlgorithm {
         if size % 2 == 0 {
             panic!("Can't create maze with a even size, the size must be odd!");
         }
-        let mut maze = Maze::new(size);
-        maze.set(0, 0, CellType::Start);
+        let mut maze = Maze::new(size + 2); // add 2 to the size for walls
+
+        for x in 0..size {
+            for y in 0.. size {
+                maze.set(x, y, CellType::Wall);
+            }
+        }
+        let (start_x, start_y) = (1, 1);
+        maze.set(start_x, start_y, CellType::Path);
+
+        let stack: Vec<(usize, usize)> = vec![(start_x, start_y)];
         RecursiveBacktrackingAlgorithm {
             maze,
-            stack: vec![(0, 0)],
+            stack: stack,
             rng: thread_rng(),
         }
     }
@@ -53,7 +62,9 @@ impl MazeGenerator for RecursiveBacktrackingAlgorithm {
             }
             true
         } else {
-            self.maze.set(self.maze.size - 1, self.maze.size - 1, CellType::End);
+            self.maze.set(self.maze.size - 2, self.maze.size - 1, CellType::End);
+            self.maze.set(1, 0, CellType::Start);
+            println!("Maze generation is finished");
             false
         }
     }

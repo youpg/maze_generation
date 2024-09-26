@@ -1,5 +1,3 @@
-use core::panic;
-
 use macroquad::prelude::*;
 
 mod cell;
@@ -8,6 +6,7 @@ mod recursive_backtracking_algorithm;
 mod randomized_prims_algorithm;
 mod maze_generator;
 
+use miniquad::window;
 use recursive_backtracking_algorithm::RecursiveBacktrackingAlgorithm;
 use randomized_prims_algorithm::RandomizedPrimsAlgorithm;
 use maze_generator::MazeGenerator;
@@ -20,6 +19,7 @@ enum GeneratorAlgorithm {
 
 #[macroquad::main("Maze Generator")]
 async fn main() {
+    window::set_window_size(1000, 1000);
     let maze_size: usize = 99; // odd number for maze_size
     let generator_algorithm: GeneratorAlgorithm = GeneratorAlgorithm::RecursiveBacktrackingAlgorithm;
 
