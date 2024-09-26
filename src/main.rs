@@ -42,8 +42,8 @@ enum GeneratorAlgorithm {
 #[macroquad::main("Maze Generator")]
 async fn main() {
     window::set_window_size(1000, 1000);
-    let maze_size: usize = 99; // odd number for maze_size
-    let generator_algorithm: GeneratorAlgorithm = GeneratorAlgorithm::RandomizedPrims;
+    let maze_size: usize = 9; // odd number for maze_size
+    let generator_algorithm: GeneratorAlgorithm = GeneratorAlgorithm::RandomizedKruskals;
 
 
     let mut generator: Box<dyn MazeGenerator> = match generator_algorithm {
@@ -53,7 +53,7 @@ async fn main() {
 
     };
     let mut finished: bool = false;
-    let instant_generation: bool = false;
+    let instant_generation: bool = true;
     
     if instant_generation {
         generator.generate_all();
