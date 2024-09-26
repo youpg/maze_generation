@@ -1,5 +1,7 @@
 use crate::maze;
 use crate::cell;
+use crate::maze_generator;
+use maze_generator::MazeGenerator;
 
 use maze::Maze;
 use cell::CellType;
@@ -26,8 +28,10 @@ impl RecursiveBacktrackingAlgorithm {
             rng: thread_rng(),
         }
     }
+}
 
-    pub fn step(&mut self) -> bool {
+impl MazeGenerator for RecursiveBacktrackingAlgorithm {
+    fn step(&mut self) -> bool {
         if let Some(&(x, y)) = self.stack.last() {
             let mut neighbors = vec![];
             for (dx, dy) in &[(0, 2), (2, 0), (0, -2), (-2, 0)] {
@@ -54,7 +58,11 @@ impl RecursiveBacktrackingAlgorithm {
         }
     }
 
-    pub fn generate_all(&mut self) {
+    fn generate_all(&mut self) {
         while self.step() {}
+    }
+
+    fn draw_maze(&self) {
+        self.maze.draw_maze();
     }
 }
