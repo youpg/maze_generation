@@ -35,7 +35,7 @@ impl Maze {
             for x in 0..self.size {
                 let cell = self.get(x, y).unwrap();
                 let color = match cell.cell_type {
-                    CellType::Wall => BLACK,
+                    CellType::Wall => PURPLE,
                     CellType::Path => WHITE,
                     CellType::Start => BLUE,
                     CellType::End => RED,

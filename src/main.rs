@@ -1,19 +1,41 @@
 use macroquad::prelude::*;
+use miniquad::window::{self, request_quit};
 
 mod cell;
 mod maze;
-mod recursive_backtracking_algorithm;
-mod randomized_prims_algorithm;
 mod maze_generator;
 
-use miniquad::window;
-use recursive_backtracking_algorithm::RecursiveBacktrackingAlgorithm;
-use randomized_prims_algorithm::RandomizedPrimsAlgorithm;
+// algorithms
+mod recursive_backtracking;
+mod randomized_prims;
+mod randomized_kruskals;
+
 use maze_generator::MazeGenerator;
 
+// algorithms
+use recursive_backtracking::RecursiveBacktracking;
+use randomized_prims::RandomizedPrims;
+use randomized_kruskals::RandomizedKruskals;
+
+#[allow(dead_code)]
 enum GeneratorAlgorithm {
-    RecursiveBacktrackingAlgorithm,
-    RandomizedPrimsAlgorithm,
+    // implemented:
+    RecursiveBacktracking,
+    RandomizedPrims,
+
+    // implementing:
+    RandomizedKruskals,
+
+    // not implemented yet (TODO):
+
+    // Ellers
+    // AldousBroder
+    // Wilsons
+    // RecursiveDivision
+    // BinaryTree
+    // RandomizedDepthFirstSearch (DFS)
+
+
 }
 
 
@@ -21,12 +43,14 @@ enum GeneratorAlgorithm {
 async fn main() {
     window::set_window_size(1000, 1000);
     let maze_size: usize = 99; // odd number for maze_size
-    let generator_algorithm: GeneratorAlgorithm = GeneratorAlgorithm::RecursiveBacktrackingAlgorithm;
+    let generator_algorithm: GeneratorAlgorithm = GeneratorAlgorithm::RandomizedPrims;
 
 
     let mut generator: Box<dyn MazeGenerator> = match generator_algorithm {
-        GeneratorAlgorithm::RecursiveBacktrackingAlgorithm => Box::new(RecursiveBacktrackingAlgorithm::new(maze_size)),
-        GeneratorAlgorithm::RandomizedPrimsAlgorithm => Box::new(RandomizedPrimsAlgorithm::new(maze_size)),
+        GeneratorAlgorithm::RecursiveBacktracking => Box::new(RecursiveBacktracking::new(maze_size)),
+        GeneratorAlgorithm::RandomizedPrims => Box::new(RandomizedPrims::new(maze_size)),
+        GeneratorAlgorithm::RandomizedKruskals => Box::new(RandomizedKruskals::new(maze_size))
+
     };
     let mut finished: bool = false;
     let instant_generation: bool = false;
@@ -38,6 +62,10 @@ async fn main() {
 
     loop {
         clear_background(LIGHTGRAY);
+
+        if is_key_pressed(KeyCode::Escape) {
+            request_quit();
+        }
         
         if !finished {
             finished = !generator.step();

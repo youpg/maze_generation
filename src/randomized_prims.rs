@@ -8,13 +8,13 @@ use maze_generator::MazeGenerator;
 use ::rand::thread_rng;
 use rand::Rng;
 
-pub struct RandomizedPrimsAlgorithm {
-    pub maze: Maze,
-    pub frontier: Vec<(usize, usize)>,
+pub struct RandomizedPrims {
+    maze: Maze,
+    frontier: Vec<(usize, usize)>,
     rng: ::rand::rngs::ThreadRng,
 }
 
-impl RandomizedPrimsAlgorithm {
+impl RandomizedPrims {
     pub fn new(size: usize) -> Self {
         if size % 2 == 0 {
             panic!("Can't create a maze with a even size, the size must be odd!");
@@ -34,7 +34,7 @@ impl RandomizedPrimsAlgorithm {
         let mut frontier = Vec::new();
         Self::add_frontier(&mut maze, &mut frontier, start_x, start_y);
 
-        RandomizedPrimsAlgorithm {
+        RandomizedPrims {
             maze,
             frontier,
             rng: thread_rng(),
@@ -83,7 +83,7 @@ impl RandomizedPrimsAlgorithm {
     }
 }
 
-impl MazeGenerator for RandomizedPrimsAlgorithm {
+impl MazeGenerator for RandomizedPrims {
     fn step(&mut self) -> bool {
         if self.frontier.is_empty() {
             self.maze.set(self.maze.size - 2, self.maze.size - 1, CellType::End);

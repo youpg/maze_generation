@@ -9,13 +9,13 @@ use cell::CellType;
 use ::rand::thread_rng;
 use ::rand::seq::SliceRandom;
 
-pub struct RecursiveBacktrackingAlgorithm {
-    pub maze: Maze,
+pub struct RecursiveBacktracking {
+    maze: Maze,
     stack: Vec<(usize, usize)>,
     rng: ::rand::rngs::ThreadRng,
 }
 
-impl RecursiveBacktrackingAlgorithm {
+impl RecursiveBacktracking {
     pub fn new(size: usize) -> Self {
         if size % 2 == 0 {
             panic!("Can't create maze with a even size, the size must be odd!");
@@ -31,7 +31,7 @@ impl RecursiveBacktrackingAlgorithm {
         maze.set(start_x, start_y, CellType::Path);
 
         let stack: Vec<(usize, usize)> = vec![(start_x, start_y)];
-        RecursiveBacktrackingAlgorithm {
+        RecursiveBacktracking {
             maze,
             stack: stack,
             rng: thread_rng(),
@@ -39,7 +39,7 @@ impl RecursiveBacktrackingAlgorithm {
     }
 }
 
-impl MazeGenerator for RecursiveBacktrackingAlgorithm {
+impl MazeGenerator for RecursiveBacktracking {
     fn step(&mut self) -> bool {
         if let Some(&(x, y)) = self.stack.last() {
             let mut neighbors = vec![];
