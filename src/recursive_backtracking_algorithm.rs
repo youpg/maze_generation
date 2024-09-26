@@ -2,7 +2,7 @@ use crate::maze;
 use crate::cell;
 
 use maze::Maze;
-use cell::{Cell, CellType};
+use cell::CellType;
 
 use ::rand::thread_rng;
 use ::rand::seq::SliceRandom;
@@ -15,6 +15,9 @@ pub struct RecursiveBacktrackingAlgorithm {
 
 impl RecursiveBacktrackingAlgorithm {
     pub fn new(size: usize) -> Self {
+        if size % 2 == 0 {
+            panic!("Can't create maze with a even size, the size must be odd!");
+        }
         let mut maze = Maze::new(size);
         maze.set(0, 0, CellType::Start);
         RecursiveBacktrackingAlgorithm {
@@ -49,5 +52,9 @@ impl RecursiveBacktrackingAlgorithm {
             self.maze.set(self.maze.size - 1, self.maze.size - 1, CellType::End);
             false
         }
+    }
+
+    pub fn generate_all(&mut self) {
+        while self.step() {}
     }
 }
