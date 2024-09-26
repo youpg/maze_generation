@@ -37,24 +37,21 @@ impl Maze {
 fn main() {
     let mut rng = rand::thread_rng();
 
-    loop {
-        let mut maze: Maze = Maze::new(3);
-        let starting_cell = rng.gen_range(0..maze.size*maze.size);
-        maze.set(starting_cell, Cell::Start);
-        
-        let mut maze_route: Stack<usize> = Stack::new();
-        maze_route.push(starting_cell);
-        
-        let neighbors_of_cell: [Option<usize>; 4] = get_neighbors(&maze.size, starting_cell);
+    let mut maze: Maze = Maze::new(3);
+    let starting_cell = rng.gen_range(0..maze.size*maze.size);
+    maze.set(starting_cell, Cell::Start);
     
-        let valid_neighboring_cells: Vec<_> = neighbors_of_cell.iter().filter_map(|&x| x).collect();
-        for cell in valid_neighboring_cells {
-            maze.set(cell, Cell::Path);
-        }
+    let mut maze_route: Stack<usize> = Stack::new();
+    maze_route.push(starting_cell);
     
-        print_maze(&maze);
-        println!("\n\n");
-    }
+    let neighbors_of_cell: [Option<usize>; 4] = get_unvisited_neighbors(&maze, starting_cell);
+    println!("{:?}", neighbors_of_cell);
+
+    let valid_neighboring_cells: Vec<_> = neighbors_of_cell.iter().filter_map(|&x| x).collect();
+    let random_neigboring_cell: usize = valid_neighboring_cells[rng.gen_range(0..valid_neighboring_cells.len())];
+    maze.set(random_neigboring_cell, Cell::Path);
+
+    print_maze(&maze);
 
 }
 
@@ -73,21 +70,22 @@ fn print_maze(maze: &Maze) {
     }
 }
 
-fn get_neighbors(maze_size: &usize, cell_index: usize) -> [Option<usize>; 4] {
+fn get_unvisited_neighbors(maze: &Maze, cell_index: usize) -> [Option<usize>; 4] {
     let mut neighbors: [Option<usize>; 4] = [None; 4];
+    let maze_size: usize = maze.size;
     if cell_index < maze_size*maze_size {
         // right neighbor index 0
-        if (cell_index + 1) % *maze_size != 0 {
+        if (cell_index + 1) % maze_size != 0 {
             neighbors[0] = Some(cell_index + 1);
         }
     
         // top neighbor index 1
-        if cell_index >= *maze_size {
+        if cell_index >= maze_size{
             neighbors[1] = Some(cell_index - maze_size);
         }
     
         // left neighbor index 2
-        if cell_index % *maze_size != 0 {
+        if cell_index % maze_size != 0 {
             neighbors[2] = Some(cell_index - 1);
         }
     
