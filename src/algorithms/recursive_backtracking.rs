@@ -76,4 +76,8 @@ impl MazeGenerator for RecursiveBacktracking {
     fn draw_maze(&self) {
         self.maze.draw_maze();
     }
+
+    fn get_maze(&self) -> Maze {
+        self.maze.clone()
+    }
 }

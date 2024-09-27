@@ -3,7 +3,7 @@ use macroquad::prelude::*;
 use crate::cell;
 use cell::{Cell, CellType};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Maze {
     pub size: usize,
     pub grid: Vec<Cell>,

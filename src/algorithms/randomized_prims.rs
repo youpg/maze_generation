@@ -109,4 +109,8 @@ impl MazeGenerator for RandomizedPrims {
     fn draw_maze(&self) {
         self.maze.draw_maze();
     }
+
+    fn get_maze(&self) -> Maze {
+        self.maze.clone()
+    }
 }

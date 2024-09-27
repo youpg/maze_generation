@@ -15,7 +15,6 @@ pub struct RandomizedKruskals {
     maze: Maze,
     walls: Vec<((usize, usize), (usize, usize))>,
     disjoint_set: Vec<usize>,
-    rng: rand::rngs::ThreadRng,
 }
 
 impl RandomizedKruskals {
@@ -57,7 +56,6 @@ impl RandomizedKruskals {
             maze,
             walls,
             disjoint_set,
-            rng: thread_rng(),
         }
     }
 
@@ -103,5 +101,9 @@ impl MazeGenerator for RandomizedKruskals {
 
     fn draw_maze(&self) {
         self.maze.draw_maze();
+    }
+
+    fn get_maze(&self) -> Maze {
+        self.maze.clone()
     }
 }
