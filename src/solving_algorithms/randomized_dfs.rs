@@ -9,7 +9,6 @@ pub struct RandomizedDFS {
     maze: Maze,
     stack: Vec<(usize, usize)>,
     visited: Vec<bool>,
-    start: (usize, usize),
     end: (usize, usize),
     solved: bool,
     rng: rand::rngs::ThreadRng,
@@ -35,7 +34,6 @@ impl RandomizedDFS {
             maze,
             stack: vec![start],
             visited: vec![false; size * size],
-            start,
             end,
             solved: false,
             rng: thread_rng(),
@@ -96,9 +94,5 @@ impl MazeSolver for RandomizedDFS {
                 macroquad::color::GREEN,
             );
         }
-    }
-
-    fn is_solved(&self) -> bool {
-        self.solved
     }
 }
